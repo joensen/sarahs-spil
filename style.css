@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Crafty+Girls&display=swap');
+
+body {
+    font-family: 'Crafty Girls', cursive;
+    background: linear-gradient(to bottom right, #ffc0cb, #f3e5f5); /* Pink to lavender */
+    color: #4a148c; /* Deep purple */
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+header {
+    padding: 40px 20px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+h1 {
+    font-size: 4em;
+    color: #ff69b4; /* Hot pink */
+}
+
+.game-list {
+    padding: 20px;
+}
+
+.game-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px auto;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card::before {
+    content: '\2665'; /* Heart symbol */
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    font-size: 5em;
+    color: rgba(255, 105, 180, 0.2); /* Transparent hot pink */
+    transform: rotate(-45deg);
+}
+
+.game-card h3 {
+    color: #d81b60; /* Deeper pink */
+    font-size: 2em;
+}
+
+.game-card a {
+    display: inline-block;
+    background-color: #ff69b4; /* Hot pink */
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 30px;
+    margin-top: 15px;
+    transition: background-color 0.3s, transform 0.3s;
+    font-size: 1.2em;
+}
+
+.game-card a:hover {
+    background-color: #d81b60; /* Deeper pink */
+    transform: scale(1.1);
+}
+
+footer {
+    background-color: rgba(255, 105, 180, 0.8); /* Transparent hot pink */
+    color: white;
+    padding: 15px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}

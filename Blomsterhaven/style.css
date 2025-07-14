@@ -29,7 +29,7 @@ body {
 
 #sun-animation-container.rise {
     top: 20%;
-    transition: top 10s ease-in-out;
+    transition: top 3s ease-in-out;
 }
 
 #sun-animation-container.set {
@@ -216,6 +216,29 @@ body {
     pointer-events: none;
 }
 
+/* Water Particle Effect */
+.water-particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: #87ceeb;
+    border-radius: 50%;
+    animation: fall 0.5s linear forwards;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes fall {
+    from {
+        transform: translateY(0) translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(50px) translateX(15px);
+        opacity: 0;
+    }
+}
+
 @keyframes floatUp {
     from {
         opacity: 1;
@@ -228,6 +251,6 @@ body {
 }
 
 /* Cursor changes */
-.cursor-seed { cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="%238B4513"/></svg>') 12 12, auto; }
+.cursor-seed { cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="white" stroke="%23333" stroke-width="1"/></svg>') 12 12, auto; }
 .cursor-watering-can { cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%234FC3F7" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v6h-2zm0 8h2v2h-2z"/></svg>') 12 12, auto; }
 .cursor-scissors { cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23EC407A" d="M18.15 7.5l-4.42-4.42a1 1 0 0 0-1.41 0L7.5 7.85a1 1 0 0 0 0 1.41L11.58 13.5l-5.73 5.73a1 1 0 0 0 1.41 1.41L13.5 14.92l4.27 4.27a1 1 0 0 0 1.41-1.41L14.92 13.5l3.23-3.23a1 1 0 0 0 0-1.41zM6 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm12 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>') 12 12, auto; }

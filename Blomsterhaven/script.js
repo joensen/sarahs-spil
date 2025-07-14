@@ -47,7 +47,9 @@ $(document).ready(function() {
             id: flowerData.length,
             isOccupied: false,
             flowerType: null,
-            growthStage: -1
+            growthStage: -1,
+            waterLevel: 0,
+            waterNeeded: 0
         });
     }
 
@@ -109,11 +111,13 @@ $(document).ready(function() {
      * Handles clicking the 'Buy Plot' button.
      */
     $('#buy-plot-btn').on('click', function() {
-        money -= plotCost;
-        updateMoneyDisplay();
-        const garden = $('#garden');
-        garden.append('<div class="plot"></div>');
-        addPlotData();
+        if (money >= plotCost) {
+            money -= plotCost;
+            updateMoneyDisplay();
+            const garden = $('#garden');
+            garden.append('<div class="plot"></div>');
+            addPlotData();
+        }
     });
 
     /**
@@ -226,6 +230,8 @@ $(document).ready(function() {
             plot.isOccupied = true;
             plot.flowerType = selectedSeed;
             plot.growthStage = 0;
+            plot.waterLevel = 0;
+            plot.waterNeeded = Math.floor(Math.random() * 4) + 3; // Random between 3 and 6
 
             plotElement.append('<div class="flower"></div>');
             renderFlower(plotElement, plotIndex);
@@ -234,18 +240,23 @@ $(document).ready(function() {
     }
 
     /**
-     * Waters a flower, advancing its growth.
+     * Waters a flower, advancing its growth if enough water is given.
      * @param {jQuery} plotElement - The plot element containing the flower.
      * @param {number} plotIndex - The index of the plot.
      */
     function waterFlower(plotElement, plotIndex) {
         const plot = flowerData[plotIndex];
         const stages = growthStages[plot.flowerType];
+
         if (plot.growthStage < stages.length - 1) {
             if (money >= waterCost) {
                 money -= waterCost;
                 updateMoneyDisplay();
-                advanceGrowth(plotIndex);
+                plot.waterLevel++;
+                showWaterParticles(plotElement);
+                if (plot.waterLevel >= plot.waterNeeded) {
+                    advanceGrowth(plotIndex);
+                }
             }
         }
     }
@@ -259,6 +270,8 @@ $(document).ready(function() {
         const stages = growthStages[plot.flowerType];
         if (plot.growthStage < stages.length - 1) {
             plot.growthStage++;
+            plot.waterLevel = 0;
+            plot.waterNeeded = Math.floor(Math.random() * 4) + 3; // New random for next stage
             renderFlower($('.plot').eq(plotIndex), plotIndex);
         }
     }
@@ -280,6 +293,8 @@ $(document).ready(function() {
             plot.isOccupied = false;
             plot.flowerType = null;
             plot.growthStage = -1;
+            plot.waterLevel = 0;
+            plot.waterNeeded = 0;
 
             plotElement.find('.flower').fadeOut(500, function() {
                 $(this).remove();
@@ -313,6 +328,23 @@ $(document).ready(function() {
         feedback.on('animationend', function() {
             $(this).remove();
         });
+    }
+
+    /**
+     * Shows water particles over a plot.
+     * @param {jQuery} plotElement - The plot element to show particles over.
+     */
+    function showWaterParticles(plotElement) {
+        for (let i = 0; i < 10; i++) {
+            const particle = $('<div class="water-particle"></div>');
+            const x = Math.random() * plotElement.width();
+            const y = Math.random() * -20; // Start above the plot
+            particle.css({ left: x, top: y });
+            plotElement.append(particle);
+            particle.on('animationend', function() {
+                $(this).remove();
+            });
+        }
     }
 
     /**

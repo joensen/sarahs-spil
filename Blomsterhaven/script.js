@@ -3,10 +3,13 @@ $(document).ready(function() {
     let money = 50;
     let selectedTool = ''; // 'seed', 'wateringCan', 'scissors'
     let selectedSeed = ''; // 'daisy', 'tulip'
-    const flowerData = []; // Array to store the state of each plot
+    let flowerData = []; // Array to store the state of each plot
 
     // --- CONFIGURATION ---
-    const plotCount = 8;
+    const initialPlotCount = 2;
+    const maxPlots = 10;
+    const plotCost = 50;
+    const waterCost = 5;
     const seedCosts = {
         daisy: 5,
         tulip: 10
@@ -20,33 +23,62 @@ $(document).ready(function() {
         tulip: ['seed', 'sprout', 'bud', 'small-tulip', 'full-tulip']
     };
     const sunCooldown = 30000; // 30 seconds
-    const musicCooldown = 60000; // 60 seconds
+    const musicCooldown = 30000; // 30 seconds
 
     // --- INITIALIZATION ---
     initializeGarden();
     updateMoneyDisplay();
+    updateButtonStates();
 
     /**
      * Initializes the garden plots and the flowerData array.
      */
     function initializeGarden() {
-        const garden = $('#garden');
-        for (let i = 0; i < plotCount; i++) {
-            // The plots are already in the HTML, so we just initialize the data
-            flowerData.push({
-                id: i,
-                isOccupied: false,
-                flowerType: null,
-                growthStage: -1
-            });
+        for (let i = 0; i < initialPlotCount; i++) {
+            addPlotData();
         }
     }
 
     /**
-     * Updates the money display in the UI.
+     * Adds a new plot to the flowerData array.
+     */
+    function addPlotData() {
+        flowerData.push({
+            id: flowerData.length,
+            isOccupied: false,
+            flowerType: null,
+            growthStage: -1
+        });
+    }
+
+    /**
+     * Updates the money display and button states.
      */
     function updateMoneyDisplay() {
-        $('#money-display').text(`$${money}`);
+        $('#money-display').text(`${money} KR`);
+        updateButtonStates();
+    }
+
+    /**
+     * Updates the enabled/disabled state of all buttons based on money.
+     */
+    function updateButtonStates() {
+        // Seed packets
+        $('.seed-packet').each(function() {
+            const seedType = $(this).data('seed-type');
+            const cost = seedCosts[seedType];
+            $(this).prop('disabled', money < cost);
+        });
+
+        // Watering can
+        $('#watering-can').prop('disabled', money < waterCost);
+
+        // Buy plot button
+        const buyPlotBtn = $('#buy-plot-btn');
+        buyPlotBtn.prop('disabled', money < plotCost || flowerData.length >= maxPlots);
+        if (flowerData.length >= maxPlots) {
+            buyPlotBtn.hide();
+        }
     }
 
     // --- EVENT HANDLERS ---
@@ -56,12 +88,7 @@ $(document).ready(function() {
      */
     $('.seed-packet').on('click', function() {
         selectedSeed = $(this).data('seed-type');
-        const cost = seedCosts[selectedSeed];
-        if (money >= cost) {
-            selectTool('seed', $(this));
-        } else {
-            alert("You don't have enough money!");
-        }
+        selectTool('seed', $(this));
     });
 
     /**
@@ -76,6 +103,17 @@ $(document).ready(function() {
      */
     $('#scissors').on('click', function() {
         selectTool('scissors', $(this));
+    });
+
+    /**
+     * Handles clicking the 'Buy Plot' button.
+     */
+    $('#buy-plot-btn').on('click', function() {
+        money -= plotCost;
+        updateMoneyDisplay();
+        const garden = $('#garden');
+        garden.append('<div class="plot"></div>');
+        addPlotData();
     });
 
     /**
@@ -109,11 +147,16 @@ $(document).ready(function() {
      */
     $('#sun-btn').on('click', function() {
         $(this).prop('disabled', true);
+        $('#music-btn').prop('disabled', true);
+        startCooldown($(this), sunCooldown, () => {
+            $('#music-btn').prop('disabled', false);
+        });
+        animateSun();
+
         $('.plot .flower').each(function() {
             const plotIndex = $(this).parent().index();
             advanceGrowth(plotIndex);
         });
-        setTimeout(() => $(this).prop('disabled', false), sunCooldown);
     });
 
     /**
@@ -121,11 +164,16 @@ $(document).ready(function() {
      */
     $('#music-btn').on('click', function() {
         $(this).prop('disabled', true);
+        $('#sun-btn').prop('disabled', true);
+        startCooldown($(this), musicCooldown, () => {
+            $('#sun-btn').prop('disabled', false);
+        });
+        playMusic();
+
         $('.plot .flower').each(function() {
             const plotIndex = $(this).parent().index();
             advanceGrowth(plotIndex);
         });
-        setTimeout(() => $(this).prop('disabled', false), musicCooldown);
     });
 
 
@@ -181,8 +229,7 @@ $(document).ready(function() {
 
             plotElement.append('<div class="flower"></div>');
             renderFlower(plotElement, plotIndex);
-        } else {
-            alert("You don't have enough money!");
+            selectTool(''); // Deselect tool after use
         }
     }
 
@@ -192,7 +239,11 @@ $(document).ready(function() {
      * @param {number} plotIndex - The index of the plot.
      */
     function waterFlower(plotElement, plotIndex) {
-        advanceGrowth(plotIndex);
+        if (money >= waterCost) {
+            money -= waterCost;
+            updateMoneyDisplay();
+            advanceGrowth(plotIndex);
+        }
     }
 
     /**
@@ -253,10 +304,60 @@ $(document).ready(function() {
      * @param {number} amount - The amount of money earned.
      */
     function showMoneyFeedback(plotElement, amount) {
-        const feedback = $(`<div class="money-feedback">+$${amount}</div>`);
+        const feedback = $(`<div class="money-feedback">+${amount} KR</div>`);
         plotElement.append(feedback);
         feedback.on('animationend', function() {
             $(this).remove();
         });
+    }
+
+    /**
+     * Starts a cooldown timer on a button.
+     * @param {jQuery} buttonElement - The button to start the cooldown on.
+     * @param {number} duration - The cooldown duration in milliseconds.
+     * @param {function} callback - A function to call when the cooldown finishes.
+     */
+    function startCooldown(buttonElement, duration, callback) {
+        const timerElement = buttonElement.find('.cooldown-timer');
+        let secondsLeft = duration / 1000;
+
+        timerElement.text(secondsLeft).show();
+
+        const interval = setInterval(() => {
+            secondsLeft--;
+            timerElement.text(secondsLeft);
+            if (secondsLeft <= 0) {
+                clearInterval(interval);
+                timerElement.hide();
+                buttonElement.prop('disabled', false);
+                if (callback) {
+                    callback();
+                }
+                if (buttonElement.attr('id') === 'music-btn') {
+                    const musicPlayer = $('#music-player')[0];
+                    musicPlayer.pause();
+                    musicPlayer.currentTime = 0;
+                }
+            }
+        }, 1000);
+    }
+
+    /**
+     * Animates the sun rising and setting.
+     */
+    function animateSun() {
+        const sun = $('#sun-animation-container');
+        sun.addClass('rise');
+        setTimeout(() => {
+            sun.removeClass('rise').addClass('set');
+        }, sunCooldown - 2000); // Start setting 2 seconds before cooldown ends
+    }
+
+    /**
+     * Plays the music.
+     */
+    function playMusic() {
+        const musicPlayer = $('#music-player')[0];
+        musicPlayer.play();
     }
 });

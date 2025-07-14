@@ -11,6 +11,30 @@ body {
     height: 40vh;
     background: linear-gradient(to bottom, #87CEEB, #f8c4ec);
     position: relative;
+    overflow: hidden; /* Hide sun when it sets */
+}
+
+#sun-animation-container {
+    position: absolute;
+    top: 100%;
+    right: 5%;
+    width: 100px;
+    height: 100px;
+    background-color: #FFD700;
+    border-radius: 50%;
+    box-shadow: 0 0 30px #FFD700;
+    transform: translateY(-50%);
+    transition: top 2s ease-in-out;
+}
+
+#sun-animation-container.rise {
+    top: 20%;
+    transition: top 10s ease-in-out;
+}
+
+#sun-animation-container.set {
+    top: 100%;
+    transition: top 2s ease-in-out;
 }
 
 #garden-container {
@@ -89,6 +113,35 @@ body {
     gap: 15px;
 }
 
+.ui-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 2px solid #f48fb1;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.ui-label {
+    font-weight: bold;
+    color: #ad1457;
+    font-size: 1.2em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding-right: 10px;
+    border-right: 2px solid #f48fb1;
+}
+
+#buy-plot-btn {
+    background-color: white;
+}
+
+.tool-btn:disabled {
+    filter: grayscale(100%);
+    cursor: not-allowed;
+    background-color: #e0e0e0 !important;
+}
+
 .tool-btn, .action-btn {
     padding: 10px;
     border-radius: 15px;
@@ -122,6 +175,22 @@ body {
 .action-btn {
     font-size: 2.5em;
     padding: 15px;
+    position: relative; /* For countdown timer */
+}
+
+.action-btn .cooldown-timer {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #e91e63;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 0.5em;
+    font-weight: bold;
+    display: none; /* Hidden by default */
 }
 
 .action-btn:disabled {

@@ -9,7 +9,7 @@ $(document).ready(function() {
     const initialPlotCount = 2;
     const maxPlots = 10;
     const plotCost = 50;
-    const waterCost = 5;
+    const waterCost = 1;
     const seedCosts = {
         daisy: 5,
         tulip: 10
@@ -22,8 +22,8 @@ $(document).ready(function() {
         daisy: ['seed', 'sprout', 'bud', 'small-daisy', 'full-daisy'],
         tulip: ['seed', 'sprout', 'bud', 'small-tulip', 'full-tulip']
     };
-    const sunCooldown = 30000; // 30 seconds
-    const musicCooldown = 30000; // 30 seconds
+    const sunCooldown = 20000; // 20 seconds
+    const musicCooldown = 20000; // 20 seconds
 
     // --- INITIALIZATION ---
     initializeGarden();
@@ -239,10 +239,14 @@ $(document).ready(function() {
      * @param {number} plotIndex - The index of the plot.
      */
     function waterFlower(plotElement, plotIndex) {
-        if (money >= waterCost) {
-            money -= waterCost;
-            updateMoneyDisplay();
-            advanceGrowth(plotIndex);
+        const plot = flowerData[plotIndex];
+        const stages = growthStages[plot.flowerType];
+        if (plot.growthStage < stages.length - 1) {
+            if (money >= waterCost) {
+                money -= waterCost;
+                updateMoneyDisplay();
+                advanceGrowth(plotIndex);
+            }
         }
     }
 

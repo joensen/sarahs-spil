@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toiletterne</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="header">
+            <h1>Toiletterne</h1>
+            <div id="score-display">
+                <span>Bedste Score: <span id="best-score">-</span></span>
+            </div>
+        </div>
+
+        <div id="game-area">
+            <canvas id="game-canvas"></canvas>
+
+            <!-- Characters -->
+            <div id="girl" class="character">
+                <div class="character-icon girl-icon"></div>
+                <span>Pige</span>
+            </div>
+            <div id="boy" class="character">
+                <div class="character-icon boy-icon"></div>
+                <span>Dreng</span>
+            </div>
+
+            <!-- Toilets -->
+            <div id="girl-toilet" class="toilet">
+                <img src="toilet.svg" alt="Toilet">
+                <span>Pige</span>
+            </div>
+            <div id="boy-toilet" class="toilet">
+                <img src="toilet.svg" alt="Toilet">
+                <span>Dreng</span>
+            </div>
+        </div>
+
+        <div id="controls">
+            <div id="instructions">
+                <p id="instruction-text">Klik p&aring; pigen eller drengen og tegn en sti til deres toilet!</p>
+            </div>
+            <div id="buttons">
+                <button id="start-btn" disabled>Start!</button>
+            </div>
+            <div id="timer-display" style="display: none;">
+                <span>Tid: <span id="timer-value">0.0</span>s</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

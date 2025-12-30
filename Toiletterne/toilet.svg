@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120">
+  <!-- Toilet base -->
+  <ellipse cx="50" cy="100" rx="35" ry="15" fill="#e0e0e0"/>
+
+  <!-- Toilet bowl -->
+  <path d="M20 50 Q15 80 25 95 Q50 110 75 95 Q85 80 80 50 Z" fill="#f5f5f5" stroke="#bdbdbd" stroke-width="2"/>
+
+  <!-- Toilet seat -->
+  <ellipse cx="50" cy="55" rx="28" ry="18" fill="#f5f5f5" stroke="#bdbdbd" stroke-width="2"/>
+  <ellipse cx="50" cy="55" rx="20" ry="12" fill="#e3f2fd"/>
+
+  <!-- Toilet tank -->
+  <rect x="30" y="10" width="40" height="35" rx="5" fill="#f5f5f5" stroke="#bdbdbd" stroke-width="2"/>
+
+  <!-- Flush button -->
+  <rect x="45" y="15" width="10" height="8" rx="2" fill="#90caf9"/>
+
+  <!-- Tank lid -->
+  <rect x="28" y="5" width="44" height="8" rx="3" fill="#e0e0e0" stroke="#bdbdbd" stroke-width="1"/>
+</svg>
